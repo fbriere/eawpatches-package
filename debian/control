@@ -1,0 +1,14 @@
+Source: timidity-patches-eaw
+Section: non-free/sound
+Priority: extra
+Maintainer: Frederic Briere <fbriere@fbriere.net>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.1
+
+Package: timidity-patches-eaw
+Architecture: all
+Depends: timidity
+Provides: timidity-patches
+Description: Instrument files for software-only MIDI sequencer
+ GUS-compatible MIDI patch files for Timidity, a software-only MIDI
+ sequencer.  Contains a complete GM and GS MIDI patch kit.

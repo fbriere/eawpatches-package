@@ -1,0 +1,8 @@
+timidity-patches-eaw for Debian
+-------------------------------
+
+To configure TiMidity to use these patches, copy the contents of
+/usr/share/doc/timidity-patches-eaw/examples/timidity.cfg to
+/etc/timidity.cfg.
+
+ -- Frederic Briere <fbriere@fbriere.net>, Sun, 13 Jun 2004 21:31:17 -0400
