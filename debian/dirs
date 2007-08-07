@@ -1,1 +1,2 @@
-usr/share/timidity/patches-eaw
+etc/timidity/eawpatches
+usr/share/midi/eawpatches

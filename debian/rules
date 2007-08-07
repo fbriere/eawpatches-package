@@ -4,5 +4,5 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/rules/buildcore.mk
 
 
-DEB_INSTALL_CHANGELOGS_ALL := changelog.txt
+DEB_INSTALL_CHANGELOGS_eawpatches := changelog.txt
 

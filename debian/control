@@ -1,14 +1,24 @@
-Source: timidity-patches-eaw
+Source: eawpatches
 Section: non-free/sound
 Priority: extra
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Build-Depends: cdbs (>= 0.4.4), debhelper (>= 4.0.0)
 Standards-Version: 3.7.2
 
+Package: eawpatches
+Architecture: all
+Provides: timidity-patches, timidity-patches-eaw
+Conflicts: timidity-patches-eaw (<< 12-1~fbriere.3)
+Replaces: timidity-patches-eaw (<< 12-1~fbriere.3)
+Enhances: timidity
+Description: Non-free (and more complete) patch set for MIDI audio synthesis
+ This package provides a set of Gravis patch files suitable for MIDI audio
+ synthesis.  It is more complete than the freepats package, but since many of
+ these patches are of unknown origin, they cannot be distributed by Debian.
+
 Package: timidity-patches-eaw
 Architecture: all
-Depends: timidity
-Provides: timidity-patches
-Description: Instrument files for software-only MIDI sequencer
- GUS-compatible MIDI patch files for Timidity, a software-only MIDI
- sequencer.  Contains a complete GM and GS MIDI patch kit.
+Depends: eawpatches
+Description: Dummy package to ease the transition to eawpatches
+ This package only exists to automatically install the eawpatches package,
+ and can be safely removed.

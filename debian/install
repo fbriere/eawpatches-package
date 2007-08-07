@@ -1,2 +1,5 @@
-*.pat *.cfg ethnic mazpat gsdrum08 gsdrum25 gsdrum40 gus power sfx wime	usr/share/timidity/patches-eaw
+debian/eawpatches.cfg	etc/timidity
+*.cfg			etc/timidity/eawpatches
+*.pat			usr/share/midi/eawpatches
+ethnic mazpat gsdrum08 gsdrum25 gsdrum40 gus power sfx wime	usr/share/midi/eawpatches
 
