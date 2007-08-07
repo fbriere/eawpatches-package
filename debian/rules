@@ -1,42 +1,8 @@
 #! /usr/bin/make -f
 
-DEST=$(CURDIR)/debian/timidity-patches-eaw/usr/share/timidity/patches-eaw
-
-build:
-
-clean:
-	dh_testdir
-	dh_testroot
-	dh_clean
-
-install:
-	dh_testdir
-	dh_testroot
-	dh_clean -k
-	dh_installdirs
-
-	install -m0755 -d $(DEST)
-	install -m0644 *.pat *.cfg $(DEST)
-	cp -r ethnic mazpat gsdrum08 gsdrum25 gsdrum40 gus power sfx wime \
-		$(DEST)
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/rules/buildcore.mk
 
 
-binary:	binary-indep binary-arch
-
-binary-arch:
-
-binary-indep: install
-	dh_testdir
-	dh_testroot
-	dh_installdocs
-	dh_installexamples debian/timidity.cfg
-	dh_installchangelogs changelog.txt
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-.PHONY: build clean install binary binary-arch binary-indep
+DEB_INSTALL_CHANGELOGS_ALL := changelog.txt
 

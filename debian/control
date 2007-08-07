@@ -1,9 +1,9 @@
 Source: timidity-patches-eaw
 Section: non-free/sound
 Priority: extra
-Maintainer: Frederic Briere <fbriere@fbriere.net>
-Build-Depends: debhelper (>= 4.0.0)
-Standards-Version: 3.6.1
+Maintainer: Frédéric Brière <fbriere@fbriere.net>
+Build-Depends: cdbs (>= 0.4.4), debhelper (>= 4.0.0)
+Standards-Version: 3.7.2
 
 Package: timidity-patches-eaw
 Architecture: all
