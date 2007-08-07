@@ -1,3 +1,9 @@
+eawpatches (12-1~fbriere.4) unstable; urgency=low
+
+  * Fix that wacky timestamp, which confuses apt-ftparchive
+
+ -- Frédéric Brière <fbriere@fbriere.net>  Thu, 26 Jul 2007 20:31:04 -0400
+
 eawpatches (12-1~fbriere.3) unstable; urgency=low
 
   * Renamed the package -- apparently Allegro can also make use of it

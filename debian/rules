@@ -6,3 +6,9 @@ include /usr/share/cdbs/1/rules/buildcore.mk
 
 DEB_INSTALL_CHANGELOGS_eawpatches := changelog.txt
 
+# This file's timestamp elicits a warning from tar, which in turn confuses
+# apt-ftparchive (see bug #434824).
+#
+pre-build::
+	touch -d '1990-01-01 00:00:00' charang.pat
+
