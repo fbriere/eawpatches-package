@@ -4,6 +4,8 @@ Priority: extra
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Build-Depends: cdbs (>= 0.4.4), debhelper (>= 5)
 Standards-Version: 3.7.2
+Vcs-Git: http://git.fbriere.net/debian/eawpatches.git
+Vcs-Browser: http://git.debian.org/debian/eawpatches.git/
 
 Package: eawpatches
 Architecture: all
