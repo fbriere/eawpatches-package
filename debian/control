@@ -2,7 +2,7 @@ Source: eawpatches
 Section: non-free/sound
 Priority: extra
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
-Build-Depends: cdbs (>= 0.4.4), debhelper (>= 4.0.0)
+Build-Depends: cdbs (>= 0.4.4), debhelper (>= 5)
 Standards-Version: 3.7.2
 
 Package: eawpatches
