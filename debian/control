@@ -5,7 +5,7 @@ Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Build-Depends: cdbs (>= 0.4.4), debhelper (>= 5)
 Standards-Version: 3.8.0
 Vcs-Git: http://git.fbriere.net/debian/eawpatches.git
-Vcs-Browser: http://git.debian.org/debian/eawpatches.git/
+Vcs-Browser: http://git.fbriere.net/debian/eawpatches.git/
 
 Package: eawpatches
 Architecture: all
