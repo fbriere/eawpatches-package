@@ -3,6 +3,7 @@ eawpatches (12-1~fbriere.5) UNRELEASED; urgency=low
   * Bumped debhelper compat version to 5
   * Added Vcs-* control fields
   * Bumped Standards-Version to 3.8.0
+  * Added back ${misc:Depends} to appease lintian
 
  -- Frédéric Brière <fbriere@fbriere.net>  Thu, 25 Sep 2008 19:36:40 -0400
 

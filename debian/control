@@ -9,6 +9,7 @@ Vcs-Browser: http://git.fbriere.net/debian/eawpatches.git/
 
 Package: eawpatches
 Architecture: all
+Depends: ${misc:Depends}
 Provides: timidity-patches, timidity-patches-eaw
 Conflicts: timidity-patches-eaw (<< 12-1~fbriere.3)
 Replaces: timidity-patches-eaw (<< 12-1~fbriere.3)
@@ -20,7 +21,7 @@ Description: Non-free (and more complete) patch set for MIDI audio synthesis
 
 Package: timidity-patches-eaw
 Architecture: all
-Depends: eawpatches
+Depends: ${misc:Depends}, eawpatches
 Description: Dummy package to ease the transition to eawpatches
  This package only exists to automatically install the eawpatches package,
  and can be safely removed.
