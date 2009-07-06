@@ -1,3 +1,9 @@
+eawpatches (12-1~fbriere.6) UNRELEASED; urgency=low
+
+  * Removing useless debian/dirs
+
+ -- Frédéric Brière <fbriere@fbriere.net>  Sun, 05 Jul 2009 21:34:02 -0400
+
 eawpatches (12-1~fbriere.5) unstable; urgency=low
 
   * Bumped debhelper compat version to 5
