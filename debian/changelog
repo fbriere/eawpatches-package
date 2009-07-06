@@ -1,6 +1,7 @@
 eawpatches (12-1~fbriere.6) UNRELEASED; urgency=low
 
   * Removing useless debian/dirs
+  * Renaming some debian/eawpatches.* files to debian/*
 
  -- Frédéric Brière <fbriere@fbriere.net>  Sun, 05 Jul 2009 21:34:02 -0400
 
