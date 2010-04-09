@@ -1,4 +1,4 @@
-eawpatches (12-1~fbriere+6) UNRELEASED; urgency=low
+eawpatches (12-1~fbriere.6) UNRELEASED; urgency=low
 
   * Removing useless debian/dirs
   * Renaming some debian/eawpatches.* files to debian/*
