@@ -1,14 +1,15 @@
-#! /usr/bin/make -f
+#!/usr/bin/make -f
+%:
+	dh $@
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/rules/buildcore.mk
-
-
-DEB_INSTALL_CHANGELOGS_eawpatches := changelog.txt
+# Done automatically by debhelper >= 7.1.0
+override_dh_installchangelogs:
+	dh_installchangelogs changelog.txt
 
 # This file's timestamp elicits a warning from tar, which in turn confuses
 # apt-ftparchive (see bug #434824).
 #
-pre-build::
+override_dh_install:
 	touch -d '1990-01-01 00:00:00' charang.pat
+	dh_install
 
