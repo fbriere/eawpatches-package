@@ -2,6 +2,9 @@
 %:
 	dh $@
 
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
+
 # This file's timestamp elicits a warning from tar, which in turn confuses
 # apt-ftparchive (see bug #434824).
 #
