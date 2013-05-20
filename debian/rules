@@ -2,10 +2,6 @@
 %:
 	dh $@
 
-# Done automatically by debhelper >= 7.1.0
-override_dh_installchangelogs:
-	dh_installchangelogs changelog.txt
-
 # This file's timestamp elicits a warning from tar, which in turn confuses
 # apt-ftparchive (see bug #434824).
 #
