@@ -1,10 +1,17 @@
-eawpatches (12-1~fbriere.6) UNRELEASED; urgency=low
+eawpatches (1:12-1~fbriere+6) unstable; urgency=low
 
-  * Removing useless debian/dirs
-  * Renaming some debian/eawpatches.* files to debian/*
-  * Bumped Standards-Version to 3.8.2
+  * Compress binary package with xz
+  * Added Bugs header to control file
+  * Removed all traces of timidity-patches-eaw, which is long gone by now
+  * Changed Debian version format to appease lintian
+  * Various packaging tweaks and updates
+    - Switched source package format to 3.0 (quilt)
+    - Switched from CDBS to dh 9
+    - Bumped Standards-Version to 3.9.4
+    - Renamed some debian/eawpatches.* files to debian/*
+    - Removed useless debian/dirs
 
- -- Frédéric Brière <fbriere@fbriere.net>  Sun, 05 Jul 2009 21:34:02 -0400
+ -- Frédéric Brière <fbriere@fbriere.net>  Mon, 20 May 2013 17:21:09 -0400
 
 eawpatches (12-1~fbriere.5) unstable; urgency=low
 
