@@ -9,10 +9,5 @@ to /etc/timidity.cfg:
 If you have installed the freepats package, you may need to remove (or
 comment out) the "source /etc/timidity/freepats.cfg" line.
 
-Also, if you had previously configured TiMidity++ to use the old
-timidity-patches-eaw package, you should remove the
-"dir /usr/share/timidity/patches-eaw" and subsequent "source" lines which
-you once added.
-
 
  -- Frederic Briere <fbriere@fbriere.net>, Wed, 27 Jun 2007 19:49:11 -0400

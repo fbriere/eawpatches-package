@@ -11,18 +11,9 @@ Bugs: mailto:fbriere@fbriere.net
 Package: eawpatches
 Architecture: all
 Depends: ${misc:Depends}
-Provides: timidity-patches, timidity-patches-eaw
-Conflicts: timidity-patches-eaw (<< 12-1~fbriere.3)
-Replaces: timidity-patches-eaw (<< 12-1~fbriere.3)
 Enhances: timidity
 Description: Non-free (and more complete) patch set for MIDI audio synthesis
  This package provides a set of Gravis patch files suitable for MIDI audio
  synthesis.  It is more complete than the freepats package, but since many of
  these patches are of unknown origin, they cannot be distributed by Debian.
 
-Package: timidity-patches-eaw
-Architecture: all
-Depends: ${misc:Depends}, eawpatches
-Description: Dummy package to ease the transition to eawpatches
- This package only exists to automatically install the eawpatches package,
- and can be safely removed.

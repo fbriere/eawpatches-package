@@ -1,8 +1,0 @@
-eawpatches (12-1~fbriere.3) unstable; urgency=low
-
-  If you are upgrading from the timidity-patches-eaw package, please note
-  that the location of the patches and config files has changed.  Please
-  read /usr/share/doc/eawpatches/README.Debian for how to configure
-  TiMidity++.
-
- -- Frédéric Brière <fbriere@fbriere.net>  Wed, 27 Jun 2007 20:00:31 -0400
