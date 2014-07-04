@@ -4,5 +4,5 @@
 
 override_dh_install:
 	dh_install
-	sed -i "s/\$${local:Version}/$(shell dpkg-parsechangelog --show-field Version)/g" debian/eawpatches-package/usr/share/eawpatches-package/control
+	sed -i "s/\$${local:Version}/$(shell dpkg-parsechangelog | sed -n '/^Version: / s///p')/g" debian/eawpatches-package/usr/share/eawpatches-package/control
 
