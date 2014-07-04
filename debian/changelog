@@ -2,6 +2,7 @@ eawpatches-package (1~fbriere+7) UNRELEASED; urgency=medium
 
   * Converted the eawpatches package to an eawpatches packager
   * Delete the apparently duplicate last line of gravis.cfg
+  * Moved the repository to GitHub
   * Some packaging tweaks and updates
     - Move *.txt files in subdirectories to /usr/share/doc
     - Mark packages as Multi-Arch: foreign
