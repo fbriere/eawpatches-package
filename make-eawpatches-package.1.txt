@@ -16,8 +16,8 @@ Creates a Debian package from an eawpatches archive file.
 
 By default, the packager will attempt to download the archive file from
 several possible locations.  You can instead provide a specific 'URL' to
-download from, or a local 'filename'.  Both *.zip* and *.tar.gz* versions
-are supported.
+download from, or a local 'filename'.  Both *.tar.gz* and *.zip* versions
+are supported (the latter only if the *unzip* command is available).
 
 Upon success, the resulting *eawpatches* package will be located in the
 current directory.
