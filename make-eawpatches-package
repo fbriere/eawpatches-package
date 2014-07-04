@@ -54,8 +54,8 @@ EOF
 set_default_args() {
 	# (This is mostly copied from googleearth-package)
 	local SYS_MAILNAME="$(cat /etc/mailname)"
-	OPT_FULLNAME="${DEBFULLNAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}"
-	OPT_EMAIL="${DEBEMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname)}}"
+	OPT_FULLNAME="${DEBFULLNAME:-${NAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}}"
+	OPT_EMAIL="${DEBEMAIL:-${EMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname)}}}"
 }
 
 # Process command-line arguments, setting $OPT_* variables

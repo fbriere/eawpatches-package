@@ -26,13 +26,13 @@ OPTIONS
 -------
 *--fullname* 'name'::
 	Use 'name' as full name in the package's Maintainer field.  Defaults
-	to the *DEBFULLNAME* environment variable if set, or the local user's
-	name in '/etc/passwd' otherwise.  (*--help* will display the default
-	value.)
+	to the *DEBFULLNAME* or *NAME* environment variable if set, or the
+	local user's name in '/etc/passwd' otherwise.  (*--help* will display
+	the default value.)
 
 *--email* 'email'::
 	Use 'email' as email address in the package's Maintainer field.
-	Defaults to the *DEBEMAIL* environment variable if set, or
+	Defaults to the *DEBEMAIL* or *EMAIL* environment variable if set, or
 	"'local-user'@'hostname'" otherwise.  (*--help* will display the
 	default value.)
 
