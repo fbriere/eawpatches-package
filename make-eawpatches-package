@@ -134,29 +134,23 @@ extract() {
 	fi
 }
 
-# Number of pathnames matched by a wildcard pattern
-num_globbed() {
-	# A pattern without any matches will be left unchanged, in which
-	# case the (single) argument will not exist
-	if [ $# -eq 1 -a ! -e "$1" ]; then
-		echo 0
-	else
-		echo $#
-	fi
-}
-
 # Figure out the root directory of an extracted archive
 root_dir() {
 	local DIR="$1"
 	shift
 
-	if [ $(num_globbed "$DIR"/*.pat) -gt 0 ]; then
+	if ls "$DIR"/*.pat >/dev/null 2>&1; then
 		echo "$DIR"
-	elif [ $(num_globbed "$DIR"/*/*.pat) -gt 0 -a $(num_globbed "$DIR"/*) -eq 1 ]; then
-		echo "$DIR"/*
-	else
-		return 1
+		return 0
+	elif ls "$DIR"/*/*.pat >/dev/null 2>&1; then
+		# Make sure there is only one top subdirectory
+		if [ $(ls -d "$DIR"/* | wc -l) -eq 1 ]; then
+			echo "$DIR"/*
+			return 0
+		fi
 	fi
+
+	return 1
 }
 
 # Build the filesystem tree for our binary package from an unpacked archive.
