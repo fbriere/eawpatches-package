@@ -54,7 +54,7 @@ EOF
 # Set default args early on -- they may be displayed in usage()
 set_default_args() {
 	# (This is mostly copied from googleearth-package)
-	local SYS_MAILNAME="$(cat /etc/mailname)"
+	local SYS_MAILNAME="$(cat /etc/mailname 2>/dev/null)"
 	OPT_FULLNAME="${DEBFULLNAME:-${NAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}}"
 	OPT_EMAIL="${DEBEMAIL:-${EMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname)}}}"
 }
