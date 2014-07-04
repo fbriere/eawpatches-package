@@ -46,6 +46,7 @@ Options:
   --email <email>     Email address in Maintainer field  [$OPT_EMAIL]
   --no-ftp            Do not try to fetch ftp: URLs
   --force             Override safety checks
+  --list-urls         Display the list of URLs used by default
   --help              Show this help message
 EOF
 }
@@ -80,6 +81,10 @@ parse_args() {
 				;;
 			--no-ftp)
 				OPT_NO_FTP=true
+				;;
+			--list-urls)
+				default_urls
+				exit 0
 				;;
 			--help)
 				usage

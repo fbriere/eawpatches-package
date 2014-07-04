@@ -39,6 +39,12 @@ OPTIONS
 *--no-ftp*::
 	Do not attempt to download files via FTP.
 
+*--list-urls*::
+	Display the list of URLs which will be used by default if no 'URL' or
+	'filename' is provided on the command-line.  They will be tried one by
+	one in random order, up until the archive file is successfully
+	downloaded or the URL list is exhausted.
+
 *--force*::
 	Override safety checks.
 
