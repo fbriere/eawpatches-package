@@ -1,9 +1,9 @@
 Package: eawpatches
-Version: 1:12-%VERSION%
+Version: 1:12-${local:Version}
 Architecture: all
 Multi-Arch: foreign
 Bugs: mailto:fbriere@fbriere.net
-Maintainer: %FULLNAME% <%EMAIL%>
+Maintainer: ${local:Maintainer}
 Recommends: eawpatches-package
 Enhances: timidity
 Section: non-free/sound
