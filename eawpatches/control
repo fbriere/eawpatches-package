@@ -1,6 +1,7 @@
 Package: eawpatches
 Version: 1:12-%VERSION%
 Architecture: all
+Multi-Arch: foreign
 Bugs: mailto:fbriere@fbriere.net
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Recommends: eawpatches-package

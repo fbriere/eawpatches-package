@@ -3,6 +3,7 @@ eawpatches-package (1~fbriere+7) UNRELEASED; urgency=medium
   * Converted the eawpatches package to an eawpatches packager
   * Delete the apparently duplicate last line of gravis.cfg
   * Some packaging tweaks and updates
+    - Mark packages as Multi-Arch: foreign
     - Bumped Standards-Version to 3.9.5
 
  -- Frédéric Brière <fbriere@fbriere.net>  Wed, 02 Jul 2014 11:56:12 -0400

@@ -10,6 +10,7 @@ Bugs: mailto:fbriere@fbriere.net
 
 Package: eawpatches-package
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}, fakeroot, wget | curl
 Recommends: unzip
 Enhances: timidity
