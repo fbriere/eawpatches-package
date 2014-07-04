@@ -256,8 +256,12 @@ process_file() {
 
 	if ! check_md5sum "$FILENAME"; then
 		echo "$FILENAME: wrong checksum -- file is probably corrupt or invalid" >&2
-		# TODO: Allow overriding this check
-		return 1
+		if [ "$OPT_FORCE" = true ]; then
+			echo "Ignoring as requested by --force" >&2
+		else
+			echo "Use --force to ignore this error." >&2
+			return 1
+		fi
 	fi
 
 	rm -rf "$WORK_DIR/src"
