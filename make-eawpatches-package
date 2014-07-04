@@ -294,6 +294,10 @@ process_file() {
 
 	if ! extract "$FILENAME" "$WORK_DIR/src"; then
 		echo "$FILENAME: unknown file type" >&2
+		# Try to be helpful
+		if ! which unzip >/dev/null; then
+			echo "(Did you install unzip?)" >&2
+		fi
 		return 1
 	fi
 
