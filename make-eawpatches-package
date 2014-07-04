@@ -247,6 +247,7 @@ build_deb_tree() {
 	mkdir -p "$DEST/DEBIAN"
 	sed -e "s/\${local:Maintainer}/${OPT_FULLNAME} <${OPT_EMAIL}>/g" \
 		"$SHARE/control" > "$DEST/DEBIAN/control"
+	sed -i "s/\${local:Installed-Size}/$(du -k -s --apparent-size "$DEST" | cut -f1)/g" "$DEST/DEBIAN/control"
 	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
 		# This is very hackish, but we cannot rely on
 		# dpkg-parsechangelog to be available  :(

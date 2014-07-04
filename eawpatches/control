@@ -8,6 +8,7 @@ Recommends: eawpatches-package
 Enhances: timidity
 Section: non-free/sound
 Priority: extra
+Installed-Size: ${local:Installed-Size}
 Description: Non-free (and more complete) patch set for MIDI audio synthesis
  This package provides a set of Gravis patch files suitable for MIDI audio
  synthesis.  It is more complete than the freepats package, but since many of
