@@ -1,52 +1,29 @@
-This package was debianized by Frederic Briere <fbriere@fbriere.net> on
-Sun, 13 Jun 2004 21:06:39 -0400.  It was previously put together by
-Martin Mitchell <martin@debian.org>.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: eawpatches-package
+Upstream-Contact: Frédéric Brière <fbriere@fbriere.net>
+Source: http://git.fbriere.net/eawpatches.git/
+Disclaimer:
+ The archive which is downloaded by this package was put together by Eric A.
+ Welsh <ewelsh@gpc.wustl.edu>, and consists of a hodge-podge of proprietary
+ files, most of which are without any licence.  Download and use at your own
+ risk.
 
-It was downloaded from some Gentoo mirror; the original site
-<http://www.stardate.bc.ca/eawpatches/> being offline.
-
-The upstream version was put together by Eric A. Welsh <ewelsh@gpc.wustl.edu>,
-and consists of a hodge-podge of proprietary files, most of which are
-without any licence.  Download and use at your own risk.
-
-Here are some additional comments from Eric A. Welsh:
-
-
-There has been some interest in using this patch set commercially.  I am
-flattered, but I'm not sure what to say here.  I know that there are some
-patches that came from the ultrasnd mirrors which contained notices that
-they did not wish for them to be used commercially.  Since I raided the
-ultrasnd archives many years ago, I couldn't remember which ones were
-covered by this, so I just flatly said that the whole set was for
-non-commercial use only.  Since then, I have extracted the *.txt and read*.*
-files out of all the archives and grep'd them for "commercial".  While several
-of them came up as only being for non-commercial use, there are only a few in
-my set to which this applies.  These are:
-
-nearly the entire Analog drumset, drumset 25
-pistol.pat
-pistol2.pat     (not currently mapped in cfg files)
-machgun1.pat	(not currently mapped in cfg files)
-
-So, basicly you can not use the analog drums or the pistol files in any
-commercial work.  This is out of my hands.  The rest of the patches are fully
-public domain as far as I know.  It should not be hard to find another
-pistol which sounds almost as good.  As for the analog drumset, just go buy
-yourself a real TR808 or some other product far superior to these patches.
-
-If you DO use this patch set in a commercial production, I'd like to hear
-about it.  A free copy of the production might be nice too :)
-
-I release these patches as "fameware".  If you use them in any non-private
-way, give me credit.  These patches are not to be sold for profit (heaven
-forbid).  They were free when I got them and so they shall remain.
-
-
-
-
-Eric A. Welsh <ewelsh@gpc.wustl.edu>
-Center for Molecular Design
-Center for Computational Biology
-Washington University
-St. Louis, MO
+Files: *
+Copyright: Copyright © 2014 Frédéric Brière <fbriere@fbriere.net>
+License: GPL-3+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 

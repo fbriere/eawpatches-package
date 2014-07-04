@@ -1,13 +1,13 @@
-eawpatches for Debian
----------------------
+eawpatches-package
+------------------
 
-To configure TiMidity++ to use these patches, simply add the following line
-to /etc/timidity.cfg:
+To use this package, run the 'make-eawpatches-package' command. This will
+attempt to download eawpatches, and create a Debian package (.deb file) of
+its contents.
 
-  source /etc/timidity/eawpatches.cfg
+The Debian package can be installed with the command 'dpkg --install'.
 
-If you have installed the freepats package, you may need to remove (or
-comment out) the "source /etc/timidity/freepats.cfg" line.
+Keep in mind that eawpatches contains proprietary files, most of which are
+without any licence.  Download and use at your own risk.
 
-
- -- Frederic Briere <fbriere@fbriere.net>, Wed, 27 Jun 2007 19:49:11 -0400
+ -- Frederic Briere <fbriere@fbriere.net>, Thu, 03 Jul 2014 18:52:58 -0400

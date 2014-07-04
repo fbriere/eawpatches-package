@@ -1,0 +1,330 @@
+#!/bin/sh
+#
+# eawpatches-package - build a Debian package of eawpatches
+#
+# Copyright © 2014 Frédéric Brière <fbriere@fbriere.net>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+# Bunch of URLs that will be tried out (in random order) by default
+# (Blank lines and comment lines are allowed)
+DEFAULT_URLS="
+	ftp://ftp.gr.freebsd.org/pub/vendors/idgames/sounds/eawpats.zip
+	ftp://ftp.cubic.org/pub/player/patches/eawpats.zip
+	ftp://ftp.fu-berlin.de/pc/games/idgames/sounds/eawpats.zip
+	ftp://psg.mtu.edu/idgames/sounds/eawpats.zip
+	ftp://78.46.141.148/mirrors/ftp.cubic.org/player/patches/eawpats.zip
+	ftp://mancubus.net/pub/idgames/sounds/eawpats.zip
+
+	http://ftp.mancubus.net/pub/idgames/sounds/eawpats.zip
+	http://youfailit.net/pub/idgames/sounds/eawpats.zip
+
+	ftp://ftp.netbsd.org/pub/pkgsrc/distfiles/eawpats12_full.tar.gz
+	ftp://ftp.gtlib.gatech.edu/pub/gentoo/distfiles/eawpats12_full.tar.gz
+"
+
+# Filter out all *.zip URLs if unzip is not available
+if ! which unzip > /dev/null; then
+	DEFAULT_URLS="$(echo "$DEFAULT_URLS" | grep -E -v -i '\.zip')"
+fi
+
+
+usage() {
+	echo "$0 [ --force ] [ <url> | <filename> ]"
+}
+
+# Process command-line arguments, setting $OPT_URL or $OPT_FILE
+parse_args() {
+	local ARG
+
+	while [ $# -gt 0 ]; do
+		ARG="$1"
+		shift
+
+		case "$ARG" in
+			--force)
+				OPT_FORCE=true
+				;;
+			--help)
+				usage
+				exit 0
+				;;
+			--*)
+				usage >&2
+				exit 1
+				;;
+			http://* | ftp://*)
+				OPT_URL="$ARG"
+				;;
+			*)
+				if [ ! -f "$ARG" ]; then
+					echo "$0: $ARG: No such file" >&2
+					return 1
+				fi
+				OPT_FILE="$ARG"
+				;;
+		esac
+	done
+}
+
+# Inspired by googleearth-package
+verify_sanity() {
+	if [ $(id --user) -eq 0 ]; then
+		echo 'Refusing to run as root; use --force to override.' >&2
+		return 1
+	fi
+
+	if [ -u . -o -g . ]; then
+		echo 'Refusing to build in a setuid/setgid directory; use --force to override.' >&2
+		return 1
+	fi
+}
+
+# Set up download() - download <url> <output-file>
+if which wget > /dev/null; then
+	download() {
+		wget "$1" -O "$2" || return 1
+	}
+elif which curl > /dev/null; then
+	download() {
+		curl "$1" -o "$2" || return 1
+	}
+else
+	download() {
+		echo 'Either wget or curl is required to download the eawpatches archive.' >&2
+		echo '(Or you can download it yourself and point to it.)' >&2
+		exit 1
+	}
+fi
+
+# Check the MD5 of a file against known values
+check_md5sum() {
+	case "$(md5sum "$1" | cut -d ' ' -f 1)" in
+		323c540c5a7923f7cf5a220fc1b7f4a4) true ;;  # zip
+		8ebcf0583f3077346ebace93c8ea166f) true ;;  # tar
+		*) false ;;
+	esac
+}
+
+# Extract the contents of a (possible) archive
+extract() {
+	local FILE="$1" DEST="$2"
+	shift 2
+
+	# --test-label does not appear to work  :(
+	if tar -t -f "$FILE" >/dev/null 2>&1; then
+		tar x -f "$FILE" -C "$DEST"
+	elif zipinfo -h "$FILE" >/dev/null 2>&1; then
+		unzip -q "$FILE" -d "$DEST"
+	else
+		return 1
+	fi
+}
+
+# Number of pathnames matched by a wildcard pattern
+num_globbed() {
+	# A pattern without any matches will be left unchanged, in which
+	# case the (single) argument will not exist
+	if [ $# -eq 1 -a ! -e "$1" ]; then
+		echo 0
+	else
+		echo $#
+	fi
+}
+
+# Figure out the root directory of an extracted archive
+root_dir() {
+	local DIR="$1"
+	shift
+
+	if [ $(num_globbed "$DIR"/*.pat) -gt 0 ]; then
+		echo "$DIR"
+	elif [ $(num_globbed "$DIR"/*/*.pat) -gt 0 -a $(num_globbed "$DIR"/*) -eq 1 ]; then
+		echo "$DIR"/*
+	else
+		return 1
+	fi
+}
+
+# Build the filesystem tree for our binary package from an unpacked archive.
+build_deb_tree() {
+	local SRC="$1" DEST="$2"
+	shift 2
+
+	# Some additional files that we'll need
+	local SHARE="/usr/share/eawpatches-package"
+	# We'll refer to this directory a lot
+	local DOC="$DEST/usr/share/doc/eawpatches"
+
+	# Hack to allow running this script without installing the package
+	if [ ! -d "$SHARE" ]; then
+		if [ -d debian ] && [ -d eawpatches ]; then
+			SHARE=eawpatches
+			BUILDING_WITHOUT_PACKAGE=true
+		else
+			echo "Cannot find $SHARE" >&2
+			return 1
+		fi
+	fi
+
+	# Copy all *.pat files (preserving directories)
+	mkdir -p "$DEST/usr/share/midi/eawpatches"
+	find "$SRC" -name '*.pat' -printf '%P\n' \
+		| tar c -C "$SRC" --files-from=- \
+		| tar x -C "$DEST/usr/share/midi/eawpatches"
+
+	# Copy all *.cfg files, along with our eawpatches.cfg
+	mkdir -p "$DEST/etc/timidity/eawpatches"
+	cp "$SRC"/*.cfg "$DEST/etc/timidity/eawpatches/"
+	cp "$SHARE/eawpatches.cfg" "$DEST/etc/timidity/"
+	# winconfig/timidity.cfg is moved to the root in the .zip version
+	rm -f "$DEST/etc/timidity/eawpatches/timidity.cfg"
+
+	# NOTE: The .tar.gz version has one more line at the end of gravis.cfg
+	# TODO: We should probably remove it to keep both packages identical
+
+	# Documentation (under /usr/share/doc/eawpatches)
+	mkdir -p "$DOC"
+	# Copy all *.txt files, except changelog.txt and copyrigh.txt
+	find "$SRC" -name '*.txt' \! -name changelog.txt \! -name copyrigh.txt -print0 \
+		| xargs -0 cp --target-directory "$DOC/"
+	# eawpats.txt is renamed eawpats.doc in the .zip version
+	[ -e "$SRC/eawpats.doc" ] && cp "$SRC/eawpats.doc" "$DOC/eawpats.txt"
+	# Copy the changelog under its proper name
+	cp "$SRC/changelog.txt" "$DOC/changelog"
+	gzip -9 --no-name "$DOC/changelog"
+	# Same with copyright, and prepend our own header
+	cp "$SHARE/copyright" "$DOC/"
+	cat "$SRC/copyrigh.txt" >> "$DOC/copyright"
+	# Borrow the Debian changelog from eawpatches-package
+	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
+		gzip -9 -c --no-name debian/changelog > "$DOC/changelog.Debian.gz"
+	else
+		cp /usr/share/doc/eawpatches-package/changelog.gz "$DOC/changelog.Debian.gz"
+	fi
+	# README.Debian
+	cp "$SHARE/README.Debian" "$DOC/"
+	# Finally, compress anything over 4 KiB (except copyright)
+	find "$DOC" -size +4k \! -name 'copyright' \! -name '*.gz' -print0 \
+		| xargs -0 gzip -9 --no-name
+
+	# lintian override for package-contains-ancient-file
+	mkdir -p "$DEST/usr/share/lintian/overrides"
+	cp "$SHARE/lintian-overrides" "$DEST/usr/share/lintian/overrides/eawpatches"
+
+	# DEBIAN directory
+	mkdir -p "$DEST/DEBIAN"
+	cp "$SHARE/control" "$DEST/DEBIAN/"
+	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
+		# This is very hackish, but we cannot rely on
+		# dpkg-parsechangelog to be available  :(
+		sed -i "s/%VERSION%/$(sed -n '1 s/.*(\(.*\)).*/\1/p' debian/changelog)/g" "$DEST/DEBIAN/control"
+	fi
+	# Generate conffiles
+	find "$DEST/etc" -type f -printf '/etc/%P\n' >> "$DEST/DEBIAN/conffiles"
+	# Generate md5sums (which must be relative to $DEST)
+	(cd "$DEST" && find . -type f \! -regex './\(DEBIAN\|etc\)/.*' -printf '%P\0' \
+		| LC_ALL=C sort --zero-terminated \
+		| xargs -0 md5sum) > "$DEST/DEBIAN/md5sums"
+
+	# This file's timestamp elicits a warning from tar, which in turn confuses
+	# apt-ftparchive (see bug #434824).
+	#touch -d '1990-01-01 00:00:00' "$DEST/usr/share/midi/eawpatches/charang.pat"
+
+	# Fix permissions
+	find "$DEST" -type f -print0 | xargs -0 chmod 644
+	find "$DEST" -type d -print0 | xargs -0 chmod 755
+}
+
+# Process a single (possible) archive
+process_file() {
+	local WORK_DIR="$1" FILENAME="$2"
+	shift 2
+
+	if ! check_md5sum "$FILENAME"; then
+		echo "$FILENAME: wrong checksum -- file is probably corrupt or invalid" >&2
+		# TODO: Allow overriding this check
+		return 1
+	fi
+
+	rm -rf "$WORK_DIR/src"
+	mkdir -p "$WORK_DIR/src"
+
+	if ! extract "$FILENAME" "$WORK_DIR/src"; then
+		echo "$FILENAME: unknown file type" >&2
+		return 1
+	fi
+
+	if ROOT_DIR="$(root_dir "$WORK_DIR/src")"; then
+		mkdir -p "$WORK_DIR/build"
+		build_deb_tree "$ROOT_DIR" "$WORK_DIR/build"
+	else
+		echo "Could not find appropriate contents in $FILENAME" >&2
+		return 1
+	fi
+}
+
+# Process a series of URLs, returning upon the first successful one
+process_urls() {
+	local WORK_DIR="$1"
+	shift
+
+	local UNZIP="$(which unzip)"
+
+	for URL in "$@"; do
+		case "$URL" in
+			*.zip | *.ZIP)
+				if [ ! "$UNZIP" ]; then
+					echo "Skipping <$URL>: unzip not available" >&2
+					continue
+				fi
+				;;
+		esac
+
+		download "$URL" "$WORK_DIR/eawpatches.bin" \
+			&& process_file "$WORK_DIR" "$WORK_DIR/eawpatches.bin" \
+			&& return 0
+	done
+
+	return 1
+}
+
+main() {
+	parse_args "$@"
+	[ "$OPT_FORCE" != true ] && verify_sanity
+
+	# Temporary workspace
+	local WORK_DIR="$(mktemp --directory --tmpdir)"
+	trap "rm -rf '$WORK_DIR'" EXIT
+
+	if [ "$OPT_FILE" ]; then
+		process_file "$WORK_DIR" "$OPT_FILE"
+	elif [ "$OPT_URL" ]; then
+		process_urls "$WORK_DIR" "$OPT_URL"
+	else
+		if ! process_urls "$WORK_DIR" $(echo "$DEFAULT_URLS" | grep -E -v '^\s*#' | shuf); then
+			echo "Could not find any suitable URL" >&2
+			exit 1
+		fi
+	fi
+
+	fakeroot dpkg-deb --build "$WORK_DIR/build" .
+
+	rm -rf "$WORK_DIR"
+	trap - EXIT
+}
+
+main "$@"

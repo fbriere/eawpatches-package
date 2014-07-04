@@ -1,3 +1,9 @@
+eawpatches-package (1~fbriere+7) UNRELEASED; urgency=medium
+
+  * Converted the eawpatches package to an eawpatches packager
+
+ -- Frédéric Brière <fbriere@fbriere.net>  Wed, 02 Jul 2014 11:56:12 -0400
+
 eawpatches (1:12-1~fbriere+6) unstable; urgency=low
 
   * Compress binary package with xz

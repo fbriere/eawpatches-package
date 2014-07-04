@@ -1,5 +1,5 @@
-Source: eawpatches
-Section: non-free/sound
+Source: eawpatches-package
+Section: contrib/sound
 Priority: extra
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Build-Depends: debhelper (>= 9)
@@ -8,12 +8,16 @@ Vcs-Git: http://git.fbriere.net/debian/eawpatches.git
 Vcs-Browser: http://git.fbriere.net/debian/eawpatches.git/
 Bugs: mailto:fbriere@fbriere.net
 
-Package: eawpatches
+Package: eawpatches-package
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, fakeroot, wget | curl
+Recommends: unzip
 Enhances: timidity
 Description: Non-free (and more complete) patch set for MIDI audio synthesis
- This package provides a set of Gravis patch files suitable for MIDI audio
- synthesis.  It is more complete than the freepats package, but since many of
- these patches are of unknown origin, they cannot be distributed by Debian.
-
+ eawpatches (also known as eawpats) provides a set of Gravis patch files
+ suitable for MIDI audio synthesis.  It is more complete than the freepats
+ package, but since many of these patches are of unknown origin, they cannot be
+ distributed by Debian.
+ .
+ This utility makes it possible to build your own personal Debian package
+ of eawpatches.
