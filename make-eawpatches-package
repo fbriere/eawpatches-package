@@ -38,7 +38,7 @@ DEFAULT_URLS="
 
 
 usage() {
-	echo "$0 [ --force ] [ <url> | <filename> ]"
+	echo "$0 [ --force ] [ --no-ftp ] [ <url> | <filename> ]"
 }
 
 # Process command-line arguments, setting $OPT_* variables
@@ -52,6 +52,9 @@ parse_args() {
 		case "$ARG" in
 			--force)
 				OPT_FORCE=true
+				;;
+			--no-ftp)
+				OPT_NO_FTP=true
 				;;
 			--help)
 				usage
@@ -275,6 +278,12 @@ process_url() {
 	shift 2
 
 	case "$URL" in
+		ftp:*)
+			if [ "$OPT_NO_FTP" = true ]; then
+				echo "Not downloading <$URL>: --no-ftp was specified" >&2
+				return 1
+			fi
+			;;
 		*.zip | *.ZIP)
 			if [ ! "$(which unzip)" -a "$OPT_FORCE" != true ]; then
 				echo "Not downloading <$URL>: unzip not available; use --force to override" >&2
@@ -314,6 +323,11 @@ default_urls() {
 		egrep -v '^(#|$)' |\
 		if [ ! "$(which unzip)" ]; then
 			egrep -v -i '\.zip$'
+		else
+			cat
+		fi |\
+		if [ "$OPT_NO_FTP" = true ]; then
+			egrep -v '^ftp:'
 		else
 			cat
 		fi
