@@ -309,10 +309,11 @@ process_file_or_url() {
 
 # Returns a cleaned-up and filtered $DEFAULT_URLS
 default_urls() {
-	echo "$DEFAULT_URLS" | \
-		egrep -v '^\s*#' | \
+	echo "$DEFAULT_URLS" |\
+		sed 's/^\s\+//' |\
+		egrep -v '^(#|$)' |\
 		if [ ! "$(which unzip)" ]; then
-			egrep -v -i '\.zip'
+			egrep -v -i '\.zip$'
 		else
 			cat
 		fi
