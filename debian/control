@@ -3,7 +3,7 @@ Section: contrib/sound
 Priority: extra
 Maintainer: Frédéric Brière <fbriere@fbriere.net>
 Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Vcs-Git: http://git.fbriere.net/debian/eawpatches.git
 Vcs-Browser: http://git.fbriere.net/debian/eawpatches.git/
 Bugs: mailto:fbriere@fbriere.net
