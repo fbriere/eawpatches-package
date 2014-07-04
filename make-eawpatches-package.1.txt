@@ -1,0 +1,45 @@
+make-eawpatches-package(1)
+==========================
+:doctype: manpage
+
+NAME
+----
+make-eawpatches-package - builds an eawpatches Debian package
+
+SYNOPSIS
+--------
+*make-eawpatches-package* ['options' ...] ['URL' | 'filename']
+
+DESCRIPTION
+-----------
+Creates a Debian package from an eawpatches archive file.
+
+By default, the packager will attempt to download the archive file from
+several possible locations.  You can instead provide a specific 'URL' to
+download from, or a local 'filename'.  Both *.zip* and *.tar.gz* versions
+are supported.
+
+Upon success, the resulting *eawpatches* package will be located in the
+current directory.
+
+OPTIONS
+-------
+*--fullname* 'name'::
+	Use 'name' as full name in the package's Maintainer field
+
+*--email* 'email'::
+	Use 'email' as email address in the package's Maintainer field
+
+*--no-ftp*::
+	Do not attempt to download files via FTP.
+
+*--force*::
+	Override safety checks.
+
+*--help*::
+	Display a brief help message.
+
+AUTHOR
+------
+Frédéric Brière <fbriere@fbriere.net>
+
