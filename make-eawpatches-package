@@ -193,8 +193,9 @@ build_deb_tree() {
 	# winconfig/timidity.cfg is moved to the root in the .zip version
 	rm -f "$DEST/etc/timidity/eawpatches/timidity.cfg"
 
-	# NOTE: The .tar.gz version has one more line at the end of gravis.cfg
-	# TODO: We should probably remove it to keep both packages identical
+	# The .tar.gz version has one more line at the end of gravis.cfg, as
+	# compared to the .zip version -- it looks like a duplicate to me.
+	sed -i '/88 surdo/d' "$DEST/etc/timidity/eawpatches/gravis.cfg"
 
 	# Documentation (under /usr/share/doc/eawpatches)
 	mkdir -p "$DOC"
