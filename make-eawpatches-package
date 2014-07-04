@@ -36,17 +36,12 @@ DEFAULT_URLS="
 	ftp://ftp.gtlib.gatech.edu/pub/gentoo/distfiles/eawpats12_full.tar.gz
 "
 
-# Filter out all *.zip URLs if unzip is not available
-if ! which unzip > /dev/null; then
-	DEFAULT_URLS="$(echo "$DEFAULT_URLS" | grep -E -v -i '\.zip')"
-fi
-
 
 usage() {
 	echo "$0 [ --force ] [ <url> | <filename> ]"
 }
 
-# Process command-line arguments, setting $OPT_URL or $OPT_FILE
+# Process command-line arguments, setting $OPT_* variables
 parse_args() {
 	local ARG
 
@@ -66,15 +61,14 @@ parse_args() {
 				usage >&2
 				exit 1
 				;;
-			http://* | ftp://*)
-				OPT_URL="$ARG"
-				;;
 			*)
-				if [ ! -f "$ARG" ]; then
-					echo "$0: $ARG: No such file" >&2
-					return 1
+				# Only allow one source
+				if [ "$OPT_SOURCE" ]; then
+					usage
+					exit 1
+				else
+					OPT_SOURCE="$ARG"
 				fi
-				OPT_FILE="$ARG"
 				;;
 		esac
 	done
@@ -276,36 +270,59 @@ process_file() {
 	fi
 }
 
-# Process a series of URLs, returning upon the first successful one
-process_urls() {
-	local WORK_DIR="$1"
-	shift
+process_url() {
+	local WORK_DIR="$1" URL="$2"
+	shift 2
 
-	local UNZIP="$(which unzip)"
+	case "$URL" in
+		*.zip | *.ZIP)
+			if [ ! "$(which unzip)" -a "$OPT_FORCE" != true ]; then
+				echo "Not downloading <$URL>: unzip not available; use --force to override" >&2
+				return 1
+			fi
+			;;
+	esac
 
-	for URL in "$@"; do
-		case "$URL" in
-			*.zip | *.ZIP)
-				if [ ! "$UNZIP" ]; then
-					echo "Skipping <$URL>: unzip not available" >&2
-					continue
-				fi
-				;;
-		esac
-
-		download "$URL" "$WORK_DIR/eawpatches.bin" \
-			&& process_file "$WORK_DIR" "$WORK_DIR/eawpatches.bin" \
-			&& return 0
-	done
+	download "$URL" "$WORK_DIR/eawpatches.bin" \
+		&& process_file "$WORK_DIR" "$WORK_DIR/eawpatches.bin" \
+		&& return 0
 
 	return 1
 }
 
+process_file_or_url() {
+	local WORK_DIR="$1" ARG="$2"
+
+	case "$ARG" in
+		http://* | ftp://*)
+			process_url "$WORK_DIR" "$ARG"
+			;;
+		*)
+			if [ ! -f "$ARG" ]; then
+				echo "$0: $ARG: No such file" >&2
+				return 1
+			fi
+			process_file "$WORK_DIR" "$ARG"
+			;;
+	esac
+}
+
+# Returns a cleaned-up and filtered $DEFAULT_URLS
+default_urls() {
+	echo "$DEFAULT_URLS" | \
+		egrep -v '^\s*#' | \
+		if [ ! "$(which unzip)" ]; then
+			egrep -v -i '\.zip'
+		else
+			cat
+		fi
+}
+
 process_default_urls() {
-	echo "$DEFAULT_URLS" | grep -E -v '^\s*#' | shuf | {
+	default_urls | shuf | {
 			# Keep in mind that the pipe created a subshell
 			while read URL; do
-				process_urls "$WORK_DIR" "$URL" && exit
+				process_url "$WORK_DIR" "$URL" && exit
 			done
 			exit 1
 		} && return 0
@@ -322,10 +339,8 @@ main() {
 	local WORK_DIR="$(mktemp --directory --tmpdir)"
 	trap "rm -rf '$WORK_DIR'" EXIT
 
-	if [ "$OPT_FILE" ]; then
-		process_file "$WORK_DIR" "$OPT_FILE"
-	elif [ "$OPT_URL" ]; then
-		process_urls "$WORK_DIR" "$OPT_URL"
+	if [ "$OPT_SOURCE" ]; then
+		process_file_or_url "$WORK_DIR" "$OPT_SOURCE"
 	else
 		process_default_urls "$WORK_DIR"
 	fi
