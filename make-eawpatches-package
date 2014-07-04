@@ -42,10 +42,20 @@ usage() {
 Usage: $0 [ <options> ... ] [ <url> | <filename> ]
 
 Options:
+  --fullname <name>   Full name in Maintainer field  [$OPT_FULLNAME]
+  --email <email>     Email address in Maintainer field  [$OPT_EMAIL]
   --no-ftp            Do not try to fetch ftp: URLs
   --force             Override safety checks
   --help              Show this help message
 EOF
+}
+
+# Set default args early on -- they may be displayed in usage()
+set_default_args() {
+	# (This is mostly copied from googleearth-package)
+	local SYS_MAILNAME="$(cat /etc/mailname)"
+	OPT_FULLNAME="${DEBFULLNAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}"
+	OPT_EMAIL="${DEBEMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname)}}"
 }
 
 # Process command-line arguments, setting $OPT_* variables
@@ -57,6 +67,14 @@ parse_args() {
 		shift
 
 		case "$ARG" in
+			--fullname)
+				OPT_FULLNAME="$1"
+				shift
+				;;
+			--email)
+				OPT_EMAIL="$1"
+				shift
+				;;
 			--force)
 				OPT_FORCE=true
 				;;
@@ -227,7 +245,9 @@ build_deb_tree() {
 
 	# DEBIAN directory
 	mkdir -p "$DEST/DEBIAN"
-	cp "$SHARE/control" "$DEST/DEBIAN/"
+	sed -e "s/%FULLNAME%/${OPT_FULLNAME}/g" \
+		-e "s/%EMAIL%/${OPT_EMAIL}/g" \
+		"$SHARE/control" > "$DEST/DEBIAN/control"
 	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
 		# This is very hackish, but we cannot rely on
 		# dpkg-parsechangelog to be available  :(
@@ -355,6 +375,7 @@ process_default_urls() {
 }
 
 main() {
+	set_default_args
 	parse_args "$@"
 	[ "$OPT_FORCE" != true ] && verify_sanity
 

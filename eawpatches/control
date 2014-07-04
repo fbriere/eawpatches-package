@@ -3,7 +3,7 @@ Version: 1:12-%VERSION%
 Architecture: all
 Multi-Arch: foreign
 Bugs: mailto:fbriere@fbriere.net
-Maintainer: Frédéric Brière <fbriere@fbriere.net>
+Maintainer: %FULLNAME% <%EMAIL%>
 Recommends: eawpatches-package
 Enhances: timidity
 Section: non-free/sound
