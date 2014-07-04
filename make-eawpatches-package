@@ -38,7 +38,14 @@ DEFAULT_URLS="
 
 
 usage() {
-	echo "$0 [ --force ] [ --no-ftp ] [ <url> | <filename> ]"
+	cat <<EOF
+Usage: $0 [ <options> ... ] [ <url> | <filename> ]
+
+Options:
+  --no-ftp            Do not try to fetch ftp: URLs
+  --force             Override safety checks
+  --help              Show this help message
+EOF
 }
 
 # Process command-line arguments, setting $OPT_* variables
@@ -61,7 +68,8 @@ parse_args() {
 				exit 0
 				;;
 			--*)
-				usage >&2
+				echo "$0: unknown option $ARG" >&2
+				echo "Try '$0 --help' for more information." >&2
 				exit 1
 				;;
 			*)
