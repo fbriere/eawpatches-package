@@ -25,10 +25,16 @@ current directory.
 OPTIONS
 -------
 *--fullname* 'name'::
-	Use 'name' as full name in the package's Maintainer field
+	Use 'name' as full name in the package's Maintainer field.  Defaults
+	to the *DEBFULLNAME* environment variable if set, or the local user's
+	name in '/etc/passwd' otherwise.  (*--help* will display the default
+	value.)
 
 *--email* 'email'::
-	Use 'email' as email address in the package's Maintainer field
+	Use 'email' as email address in the package's Maintainer field.
+	Defaults to the *DEBEMAIL* environment variable if set, or
+	"'local-user'@'hostname'" otherwise.  (*--help* will display the
+	default value.)
 
 *--no-ftp*::
 	Do not attempt to download files via FTP.
