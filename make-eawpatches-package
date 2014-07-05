@@ -181,26 +181,31 @@ root_dir() {
 	return 1
 }
 
+# Directory where we will find our misc. files
+misc_dir() {
+	local SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+	if [ "$SCRIPT_DIR" = "/usr/bin" ]; then
+		# We are running from an installed Debian package
+		echo "/usr/share/eawpatches-package"
+	elif [ -d "$SCRIPT_DIR/debian" -a -d "$SCRIPT_DIR/eawpatches" ]; then
+		# We appear to be running from the unpacked source
+		echo "$SCRIPT_DIR/eawpatches"
+	else
+		echo "$0: Unable to find misc. files directory" >&2
+		return 1
+	fi
+}
+
 # Build the filesystem tree for our binary package from an unpacked archive.
 build_deb_tree() {
 	local SRC="$1" DEST="$2"
 	shift 2
 
 	# Some additional files that we'll need
-	local SHARE="/usr/share/eawpatches-package"
+	local SHARE="$(misc_dir)"
 	# We'll refer to this directory a lot
 	local DOC="$DEST/usr/share/doc/eawpatches"
-
-	# Hack to allow running this script without installing the package
-	if [ ! -d "$SHARE" ]; then
-		if [ -d debian ] && [ -d eawpatches ]; then
-			SHARE=eawpatches
-			BUILDING_WITHOUT_PACKAGE=true
-		else
-			echo "Cannot find $SHARE" >&2
-			return 1
-		fi
-	fi
 
 	# Copy all *.pat files (preserving directories)
 	mkdir -p "$DEST/usr/share/midi/eawpatches"
@@ -232,10 +237,10 @@ build_deb_tree() {
 	# Same with copyright, and prepend our own header
 	cp "$SHARE/copyright" "$DOC/"
 	cat "$SRC/copyrigh.txt" >> "$DOC/copyright"
-	# Borrow the Debian changelog from eawpatches-package
-	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
-		gzip -9 -c --no-name debian/changelog > "$DOC/changelog.Debian.gz"
+	if [ -e "$SHARE/../debian/changelog" ]; then
+		gzip -9 -c --no-name "$SHARE/../debian/changelog" > "$DOC/changelog.Debian.gz"
 	else
+		# Borrow the Debian changelog from eawpatches-package
 		cp /usr/share/doc/eawpatches-package/changelog.gz "$DOC/changelog.Debian.gz"
 	fi
 	# README.Debian
@@ -253,10 +258,10 @@ build_deb_tree() {
 	sed -e "s/\${local:Maintainer}/${OPT_FULLNAME} <${OPT_EMAIL}>/g" \
 		"$SHARE/control" > "$DEST/DEBIAN/control"
 	sed -i "s/\${local:Installed-Size}/$(du -k -s --apparent-size "$DEST" | cut -f1)/g" "$DEST/DEBIAN/control"
-	if [ "$BUILDING_WITHOUT_PACKAGE" = true ]; then
+	if [ -e "$SHARE/../debian/changelog" ]; then
 		# This is very hackish, but we cannot rely on
 		# dpkg-parsechangelog to be available  :(
-		sed -i "s/\${local:Version}/$(sed -n '1 s/.*(\(.*\)).*/\1/p' debian/changelog)/g" "$DEST/DEBIAN/control"
+		sed -i "s/\${local:Version}/$(sed -n '1 s/.*(\(.*\)).*/\1/p' "$SHARE/../debian/changelog")/g" "$DEST/DEBIAN/control"
 	fi
 	# Generate conffiles
 	find "$DEST/etc" -type f -printf '/etc/%P\n' | sort >> "$DEST/DEBIAN/conffiles"
@@ -387,6 +392,9 @@ main() {
 	set_default_args
 	parse_args "$@"
 	[ "$OPT_FORCE" != true ] && verify_sanity
+
+	# Make sure the directory exists before going any further
+	misc_dir >/dev/null
 
 	# Temporary workspace
 	local WORK_DIR="$(mktemp --directory --tmpdir)"
