@@ -19,6 +19,8 @@
 
 set -e
 
+VERSION=7
+
 # Bunch of URLs that will be tried out (in random order) by default
 # (Blank lines and comment lines are allowed)
 DEFAULT_URLS="
@@ -46,8 +48,11 @@ Options:
   --email <email>     Email address in Maintainer field  [$OPT_EMAIL]
   --no-ftp            Do not try to fetch ftp: URLs
   --force             Override safety checks
+
   --list-urls         Display the list of URLs used by default
+
   --help              Show this help message
+  --version           Show the version.
 EOF
 }
 
@@ -88,6 +93,10 @@ parse_args() {
 				;;
 			--help)
 				usage
+				exit 0
+				;;
+			--version)
+				echo "make-eawpatches-package version $VERSION"
 				exit 0
 				;;
 			--*)

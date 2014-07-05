@@ -51,6 +51,9 @@ OPTIONS
 *--help*::
 	Display a brief help message.
 
+*--version*::
+	Display *make-eawpatches-package* version information.
+
 AUTHOR
 ------
 Frédéric Brière <fbriere@fbriere.net>
