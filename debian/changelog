@@ -1,4 +1,4 @@
-eawpatches-package (7) UNRELEASED; urgency=medium
+eawpatches-package (7) unstable; urgency=medium
 
   * Converted the eawpatches package to an eawpatches packager
   * Delete the apparently duplicate last line of gravis.cfg
@@ -8,7 +8,7 @@ eawpatches-package (7) UNRELEASED; urgency=medium
     - Mark packages as Multi-Arch: foreign
     - Bumped Standards-Version to 3.9.5
 
- -- Frédéric Brière <fbriere@fbriere.net>  Wed, 02 Jul 2014 11:56:12 -0400
+ -- Frédéric Brière <fbriere@fbriere.net>  Sat, 05 Jul 2014 12:22:19 -0400
 
 eawpatches (1:12-1~fbriere+6) unstable; urgency=low
 
