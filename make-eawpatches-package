@@ -44,15 +44,18 @@ usage() {
 Usage: $0 [ <options> ... ] [ <url> | <filename> ]
 
 Options:
-  --fullname <name>   Full name in Maintainer field  [$OPT_FULLNAME]
-  --email <email>     Email address in Maintainer field  [$OPT_EMAIL]
-  --no-ftp            Do not try to fetch ftp: URLs
-  --force             Override safety checks
+  --fullname <name>          Full name in Maintainer field  [$OPT_FULLNAME]
+  --email <email>            Email address in Maintainer field  [$OPT_EMAIL]
+  --compress-type <type>     Compression type of resulting package  [$OPT_COMPRESS_TYPE]
+  --compress-level <level>   Compression level of resulting package  [${OPT_COMPRESS_LEVEL:-<default>}]
 
-  --list-urls         Display the list of URLs used by default
+  --no-ftp                   Do not try to fetch ftp: URLs
+  --force                    Override safety checks
 
-  --help              Show this help message
-  --version           Show the version.
+  --list-urls                Display the list of URLs used by default
+
+  --help                     Show this help message
+  --version                  Show the version.
 EOF
 }
 
@@ -62,6 +65,11 @@ set_default_args() {
 	local SYS_MAILNAME="$(cat /etc/mailname 2>/dev/null)"
 	OPT_FULLNAME="${DEBFULLNAME:-${NAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}}"
 	OPT_EMAIL="${DEBEMAIL:-${EMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname --fqdn)}}}"
+
+	# The resulting package will typically be installed right away, so
+	# there's no need to resort to the much slower xz compression type.
+	OPT_COMPRESS_TYPE=gzip
+	OPT_COMPRESS_LEVEL=
 }
 
 # Process command-line arguments, setting $OPT_* variables
@@ -79,6 +87,25 @@ parse_args() {
 				;;
 			--email)
 				OPT_EMAIL="$1"
+				shift
+				;;
+			--compress-type)
+				OPT_COMPRESS_TYPE="$1"
+				shift
+				case "$OPT_COMPRESS_TYPE" in
+					gzip|xz|bzip2|lzma|none) true ;;
+					*)
+						echo "Unknown compression type $OPT_COMPRESS_TYPE" >&2
+						if [ "$OPT_FORCE" = true ]; then
+							echo "Ignoring as requested by --force" >&2
+						else
+							exit 1
+						fi
+						;;
+				esac
+				;;
+			--compress-level)
+				OPT_COMPRESS_LEVEL="$1"
 				shift
 				;;
 			--force)
@@ -415,7 +442,10 @@ main() {
 		process_default_urls "$WORK_DIR"
 	fi
 
-	fakeroot dpkg-deb --build "$WORK_DIR/build" .
+	fakeroot dpkg-deb --build \
+		-Z${OPT_COMPRESS_TYPE} \
+		${OPT_COMPRESS_LEVEL:+-z$OPT_COMPRESS_LEVEL} \
+		"$WORK_DIR/build" .
 
 	rm -rf "$WORK_DIR"
 	trap - EXIT

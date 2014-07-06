@@ -36,6 +36,15 @@ OPTIONS
 	"'local-user'@'hostname'" otherwise.  (*--help* will display the
 	default value.)
 
+*--compress-type* 'type'::
+	Specify which compression type to use when building the package.
+	Allowed values are 'gzip', 'xz', 'bzip2', 'lzma', and 'none' (default
+	is 'gzip').
+
+*--compress-level* 'level'::
+	Specify which compression level to use when building the package.
+	See the *dpkg-deb*(1) manpage for allowed and default values.
+
 *--no-ftp*::
 	Do not attempt to download files via FTP.
 
