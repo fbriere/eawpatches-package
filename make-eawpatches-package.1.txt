@@ -36,6 +36,14 @@ OPTIONS
 	"'local-user'@'hostname'" otherwise.  (*--help* will display the
 	default value.)
 
+*--revision-append* 'string'::
+	Append 'string' to the Debian revision number.  This defaults to
+	"+local", to mark this package as being locally generated, instead of
+	fetched from a repository.
+	+
+	'string' may contain only alphanumerics and the characters + . ~ (plus,
+	full stop, tilde).
+
 *--compress-type* 'type'::
 	Specify which compression type to use when building the package.
 	Allowed values are 'gzip', 'xz', 'bzip2', 'lzma', and 'none' (default

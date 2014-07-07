@@ -44,18 +44,19 @@ usage() {
 Usage: $0 [ <options> ... ] [ <url> | <filename> ]
 
 Options:
-  --fullname <name>          Full name in Maintainer field  [$OPT_FULLNAME]
-  --email <email>            Email address in Maintainer field  [$OPT_EMAIL]
-  --compress-type <type>     Compression type of resulting package  [$OPT_COMPRESS_TYPE]
-  --compress-level <level>   Compression level of resulting package  [${OPT_COMPRESS_LEVEL:-<default>}]
+  --fullname <name>            Full name in Maintainer field  [$OPT_FULLNAME]
+  --email <email>              Email address in Maintainer field  [$OPT_EMAIL]
+  --revision-append <string>   Append to the revision number  [$OPT_REVISION_APPEND]
+  --compress-type <type>       Compression type of resulting package  [$OPT_COMPRESS_TYPE]
+  --compress-level <level>     Compression level of resulting package  [${OPT_COMPRESS_LEVEL:-<default>}]
 
-  --no-ftp                   Do not try to fetch ftp: URLs
-  --force                    Override safety checks
+  --no-ftp                     Do not try to fetch ftp: URLs
+  --force                      Override safety checks
 
-  --list-urls                Display the list of URLs used by default
+  --list-urls                  Display the list of URLs used by default
 
-  --help                     Show this help message
-  --version                  Show the version.
+  --help                       Show this help message
+  --version                    Show the version.
 EOF
 }
 
@@ -65,6 +66,8 @@ set_default_args() {
 	local SYS_MAILNAME="$(cat /etc/mailname 2>/dev/null)"
 	OPT_FULLNAME="${DEBFULLNAME:-${NAME:-$(getent passwd "$(whoami)" | cut -d ':' -f 5 | cut -d ',' -f 1)}}"
 	OPT_EMAIL="${DEBEMAIL:-${EMAIL:-$(whoami)@${SYS_MAILNAME:-$(hostname --fqdn)}}}"
+
+	OPT_REVISION_APPEND="+local"
 
 	# The resulting package will typically be installed right away, so
 	# there's no need to resort to the much slower xz compression type.
@@ -87,6 +90,10 @@ parse_args() {
 				;;
 			--email)
 				OPT_EMAIL="$1"
+				shift
+				;;
+			--revision-append)
+				OPT_REVISION_APPEND="$1"
 				shift
 				;;
 			--compress-type)
@@ -292,12 +299,13 @@ build_deb_tree() {
 	# DEBIAN directory
 	mkdir -p "$DEST/DEBIAN"
 	sed -e "s/\${local:Maintainer}/${OPT_FULLNAME} <${OPT_EMAIL}>/g" \
+		-e "s/\${local:Revision-Append}/${OPT_REVISION_APPEND}/g" \
 		"$SHARE/control" > "$DEST/DEBIAN/control"
 	sed -i "s/\${local:Installed-Size}/$(du -k -s --apparent-size "$DEST" | cut -f1)/g" "$DEST/DEBIAN/control"
 	if [ -e "$SHARE/../debian/changelog" ]; then
 		# This is very hackish, but we cannot rely on
 		# dpkg-parsechangelog to be available  :(
-		sed -i "s/\${local:Version}/$(sed -n '1 s/.*(\(.*\)).*/\1/p' "$SHARE/../debian/changelog")/g" "$DEST/DEBIAN/control"
+		sed -i "s/\${local:Revision}/$(sed -n '1 s/.*(\(.*\)).*/\1/p' "$SHARE/../debian/changelog")/g" "$DEST/DEBIAN/control"
 	fi
 	# Generate conffiles
 	find "$DEST/etc" -type f -printf '/etc/%P\n' | sort >> "$DEST/DEBIAN/conffiles"

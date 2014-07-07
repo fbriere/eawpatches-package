@@ -1,5 +1,5 @@
 Package: eawpatches
-Version: 1:12-${local:Version}
+Version: 1:12-${local:Revision}${local:Revision-Append}
 Architecture: all
 Multi-Arch: foreign
 Bugs: mailto:fbriere@fbriere.net
