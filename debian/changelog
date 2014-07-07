@@ -1,3 +1,11 @@
+eawpatches-package (9) unstable; urgency=medium
+
+  * Append "+local" to eawpatches package revision number by default
+  * Mark make-eawpatches-package.1.txt as syntax=asciidoc to Vim
+  * Added a Homepage: control field
+
+ -- Frédéric Brière <fbriere@fbriere.net>  Mon, 07 Jul 2014 09:17:37 -0400
+
 eawpatches-package (8) unstable; urgency=medium
 
   * Added --compress-type and --compress-level options
