@@ -1,6 +1,7 @@
 make-eawpatches-package(1)
 ==========================
 :doctype: manpage
+// vim: syntax=asciidoc
 
 NAME
 ----
