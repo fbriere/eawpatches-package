@@ -1,3 +1,11 @@
+eawpatches-package (10) unstable; urgency=medium
+
+  * Updating $VERSION to the current version
+  * Document compression should not fail if no documents are found
+  * Bumped Standards-Version to 3.9.6
+
+ -- Frédéric Brière <fbriere@fbriere.net>  Sat, 07 Feb 2015 15:55:47 -0500
+
 eawpatches-package (9) unstable; urgency=medium
 
   * Append "+local" to eawpatches package revision number by default

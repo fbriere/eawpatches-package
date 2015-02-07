@@ -19,7 +19,7 @@
 
 set -e
 
-VERSION=9
+VERSION=10
 
 # Bunch of URLs that will be tried out (in random order) by default
 # (Blank lines and comment lines are allowed)
