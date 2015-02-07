@@ -290,7 +290,7 @@ build_deb_tree() {
 	cp "$SHARE/README.Debian" "$DOC/"
 	# Finally, compress anything over 4 KiB (except copyright)
 	find "$DOC" -size +4k \! -name 'copyright' \! -name '*.gz' -print0 \
-		| xargs -0 gzip -9 --no-name
+		| xargs -0 --no-run-if-empty gzip -9 --no-name
 
 	# lintian override for package-contains-ancient-file
 	mkdir -p "$DEST/usr/share/lintian/overrides"
