@@ -389,7 +389,7 @@ process_file_or_url() {
 	local WORK_DIR="$1" ARG="$2"
 
 	case "$ARG" in
-		http://* | ftp://*)
+		http://* | https://* | ftp://*)
 			process_url "$WORK_DIR" "$ARG"
 			;;
 		*)
