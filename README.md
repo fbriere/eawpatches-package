@@ -19,11 +19,11 @@ Requirements
 Using eawpatches-package
 ========================
 
-To use this package, run the 'make-eawpatches-package' command.  This will
+To use this package, run the `make-eawpatches-package` command.  This will
 attempt to download eawpatches, and create a Debian package (.deb file) of
 its contents.
 
-The Debian package can be installed with the command 'dpkg --install'.
+The Debian package can be installed with the command `dpkg --install`.
 
 Legal warning
 -------------
@@ -36,7 +36,7 @@ Development
 
 This program and its source code can be downloaded from GitHub:
 
-    https://github.com/fbriere/eawpatches-package
+https://github.com/fbriere/eawpatches-package
 
 Feedback
 ========
@@ -50,5 +50,5 @@ may have about this program.  Feedback is always appreciated.  :)
 Author
 =======
 
-Frédéric Brière  <fbriere@fbriere.net>
+Frédéric Brière - fbriere@fbriere.net
 
